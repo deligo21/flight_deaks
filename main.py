@@ -32,5 +32,28 @@ for destination in sheet_data:
     )
     if flight != None:
         if flight.price < destination["lowestPrice"]:
+            
+            users = data_manager.get_customer_emails()
+            emails = [row["email"] for row in users]
+            names = [row["firstName"] for row in users]
+            
             notification = NotificationManager(flight.price, flight.origin_city, flight.origin_airport, flight.destination_city, flight.destination_airport, flight.out_date, flight.return_date)
+            
+            if flight.stop_overs > 0:
+                notification.bot_message += f"\nFlight has {flight.stop_overs} stop over, via {flight.via_city}."
+
+            link = f"https://www.google.co.uk/flights?hl=en#flt={flight.origin_airport}.{flight.destination_airport}.{flight.out_date}*{flight.destination_airport}.{flight.origin_airport}.{flight.return_date}"
             notification.telegram_bot_sendtext()
+            notification.send_emails(emails, notification.bot_message, link)
+            
+
+# print("Welcome to Rodrigo's Flight Club\nWe find the best flight deals and email you.")
+# name = input("What is your first name?\n")
+# last_name = input("What is your last name?\n")
+# email = input("What is your email?\n")
+# email_again = input("Type your email again.\n")
+
+# if email == email_again:
+#     print("Succss! Welcome to the club :D")
+# else:
+#     print('Try again')

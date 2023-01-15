@@ -30,3 +30,10 @@ class DataManager:
                 headers=self.headers_sheet
             )
             print(response.text)
+            
+    def get_customer_emails(self):
+        customers_endpoint = f"https://api.sheety.co/{os.getenv('USERNAME')}/flightDeals/users"
+        response = requests.get(customers_endpoint, headers=self.headers_sheet)
+        data = response.json()
+        self.customer_data = data["users"]
+        return self.customer_data
